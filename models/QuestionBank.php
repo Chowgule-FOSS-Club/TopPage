@@ -13,11 +13,11 @@ use yii\base\Model;
  */
 class QuestionBank extends Model
 {
-    
-    public $questions[];
-    public $answers[];
-    public $optionCount[];
-    public $checkboxData[];
+
+    public $questions;
+    public $options;
+    public $optionCount;
+    public $checkboxData;
 
     /**
      * @return array the validation rules.

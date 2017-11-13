@@ -1,11 +1,12 @@
 <?php
-
+use yii\helpers\Html;
+use yii\bootstrap\ActiveForm;
 /* @var $this yii\web\View */
 
 $this->title = 'My Yii Application';
 ?>
  <button type="button" class="btn btn-primary add-question-btn">Add Question</button>
-    <button type="button" class="btn btn-danger remove-question-btn">Remove Question</button>
+ <button type="button" class="btn btn-danger remove-question-btn">Remove Question</button>
     <div class="question-bank container">
         <div class="question-card">
             <div class="row">
@@ -48,6 +49,60 @@ $this->title = 'My Yii Application';
         </div>
     </div>
 
+
+    <?php $form = ActiveForm::begin([
+        'id' => 'login-form',
+    ]); ?>
+
+<div class="question-bank container">
+        <div class="question-card">
+            <div class="row">
+                <div class="col-md-12">
+                    <h3 class="question-number">Question - 1</h3>
+                    <hr>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">Question 1</span>
+                        <?= $form->field($model, 'questions')->textInput(['autofocus' => true]) ?>
+                    </div><br>
+                    <div class="row">
+                        <div class="count-div">
+                            <input type="hidden" value="4" class="counter">
+                        </div>
+                        <div class="col-md-6 option-div">
+                            <div class="input-group">
+                                <span class="input-group-addon" id="basic-addon1"><input class="form-check-input" type="checkbox" value=""></span>
+                                <?= $form->field($model, 'options')->textInput(['autofocus' => true]) ?>
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-addon" id="basic-addon1"><input class="form-check-input" type="checkbox" value=""></span>
+                                <?= $form->field($model, 'options')->textInput(['autofocus' => true]) ?>    
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-addon" id="basic-addon1"><input class="form-check-input" type="checkbox" value=""></span>
+                                <?= $form->field($model, 'options')->textInput(['autofocus' => true]) ?>    
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-addon" id="basic-addon1"><input class="form-check-input" type="checkbox" value=""></span>
+                                <?= $form->field($model, 'options')->textInput(['autofocus' => true]) ?>    
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-success add-option-btn">Add New Option</button>
+                            <button type="button" class="btn btn-danger remove-option-btn">Remove Option</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-lg-offset-1 col-lg-11">
+            <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
+        </div>
+    </div>
+
+    <?php ActiveForm::end(); ?>
     <?php 
     $script = <<< JS
         $(document).ready(function () {
