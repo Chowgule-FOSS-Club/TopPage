@@ -7,6 +7,8 @@ $this->title = 'My Yii Application';
 ?>
  <button type="button" class="btn btn-primary add-question-btn">Add Question</button>
  <button type="button" class="btn btn-danger remove-question-btn">Remove Question</button>
+
+ <!--
     <div class="question-bank container">
         <div class="question-card">
             <div class="row">
@@ -49,12 +51,17 @@ $this->title = 'My Yii Application';
         </div>
     </div>
 
-
+-->
     <?php $form = ActiveForm::begin([
-        'id' => 'login-form',
+        'id' => 'bank-form',
+        'fieldConfig' => [
+            'template' => "{input}",
+            'labelOptions' => ['class' => 'col-lg-1 control-label'],
+        ],
     ]); ?>
 
 <div class="question-bank container">
+<?php $checkboxTemplate = '{input}'; ?>
         <div class="question-card">
             <div class="row">
                 <div class="col-md-12">
@@ -62,28 +69,29 @@ $this->title = 'My Yii Application';
                     <hr>
                     <div class="input-group">
                         <span class="input-group-addon" id="basic-addon1">Question 1</span>
-                        <?= $form->field($model, 'questions')->textInput(['autofocus' => true]) ?>
+                        <?= $form->field($model, 'questions[]')->textInput(['autofocus' => true]) ?>
                     </div><br>
                     <div class="row">
                         <div class="count-div">
-                            <input type="hidden" value="4" class="counter">
+                        <?= $form->field($model, 'optionCount[]')->hiddenInput(['value'=> '4', 'class' =>'counter']) ?>
+                           <!-- <input type="hidden" value="4" class="counter"> -->
                         </div>
                         <div class="col-md-6 option-div">
-                            <div class="input-group">
-                                <span class="input-group-addon" id="basic-addon1"><input class="form-check-input" type="checkbox" value=""></span>
-                                <?= $form->field($model, 'options')->textInput(['autofocus' => true]) ?>
+                            <div class="input-group checkbox-div">
+                                <span class="input-group-addon" id="basic-addon1"><?= $form->field($model, 'checkboxData[]')->checkbox(['template' => $checkboxTemplate]); ?></span>
+                                <?= $form->field($model, 'options[]')->textInput(['autofocus' => true]) ?>
                             </div>
                             <div class="input-group">
-                                <span class="input-group-addon" id="basic-addon1"><input class="form-check-input" type="checkbox" value=""></span>
-                                <?= $form->field($model, 'options')->textInput(['autofocus' => true]) ?>    
+                                <span class="input-group-addon" id="basic-addon1"><?= $form->field($model, 'checkboxData[]')->checkbox(['template' => $checkboxTemplate]); ?></span>
+                                <?= $form->field($model, 'options[]')->textInput(['autofocus' => true]) ?>    
                             </div>
                             <div class="input-group">
-                                <span class="input-group-addon" id="basic-addon1"><input class="form-check-input" type="checkbox" value=""></span>
-                                <?= $form->field($model, 'options')->textInput(['autofocus' => true]) ?>    
+                                <span class="input-group-addon" id="basic-addon1"><?= $form->field($model, 'checkboxData[]')->checkbox(['template' => $checkboxTemplate]); ?></span>
+                                <?= $form->field($model, 'options[]')->textInput(['autofocus' => true]) ?>    
                             </div>
                             <div class="input-group">
-                                <span class="input-group-addon" id="basic-addon1"><input class="form-check-input" type="checkbox" value=""></span>
-                                <?= $form->field($model, 'options')->textInput(['autofocus' => true]) ?>    
+                                <span class="input-group-addon" id="basic-addon1"><?= $form->field($model, 'checkboxData[]')->checkbox(['template' => $checkboxTemplate]); ?></span>
+                                <?= $form->field($model, 'options[]')->textInput(['autofocus' => true]) ?>    
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -98,7 +106,7 @@ $this->title = 'My Yii Application';
 
     <div class="form-group">
         <div class="col-lg-offset-1 col-lg-11">
-            <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
+            <?= Html::submitButton('Generate Papers', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
         </div>
     </div>
 
@@ -107,33 +115,38 @@ $this->title = 'My Yii Application';
     $script = <<< JS
         $(document).ready(function () {
             var question_number = 1;
-            $('.add-option-btn').click(function () {
+            $('body').on('click', '.add-option-btn', function (){
                 console.log("adding new option");
                 /*
                     option_div is the division that contains all the option values.
                 */
                 var option_div = $($(this).closest('div').parent()).children('.option-div');
+
                 var new_option = "<div class=\"input-group\">"+
-                               " <span class=\"input-group-addon\" id=\"basic-addon1\"><input class=\"form-check-input\" type=\"checkbox\" value=\"\"></span>"+
-                                "<input type=\"text\" class=\"form-control\" placeholder=\"\" aria-describedby=\"basic-addon1\">"+
-                            "</div>";
+                                "<span class=\"input-group-addon\" id=\"basic-addon1\"><div class=\"form-group field-questionbank-checkboxdata\">"+
+"<input type=\"hidden\" name=\"QuestionBank[checkboxData]\" value=\"0\"><input type=\"checkbox\" id=\"questionbank-checkboxdata\" name=\"QuestionBank[checkboxData]\" value=\"1\">"+
+"</div></span>"+
+                                "<div class=\"form-group field-questionbank-options\">"+
+"<input type=\"text\" id=\"questionbank-options\" class=\"form-control\" name=\"QuestionBank[options]\" autofocus=\"\">"+
+"</div>                            </div>";
                 
-                option_div.append(new_option);
+                
+                option_div.append($('.option-div').children().last().clone());
                 /*
                     increasing the counter in the division =
                 */
-                var counter_input = $($(this).closest('div').parent()).children('.count-div').children('.counter');
+                var counter_input = $($(this).closest('div').parent()).children('.count-div').find('.counter');
                 counter_input.val(Number(counter_input.val()) + 1);
-                console.log($($(this).closest('div').parent()).children('.count-div').children('.counter').val());
             });
-            $('.remove-option-btn').click(function () {
+
+            $('body').on('click', '.remove-option-btn', function (){
                 console.log("remove option");
                 if($($(this).closest('div').parent()).children('.option-div').children().length > 2){
                     $($(this).closest('div').parent()).children('.option-div').children().last().remove();
                 /*
                     Descrease the counter in the division =
                 */
-                    var counter_input = $($(this).closest('div').parent()).children('.count-div').children('.counter');
+                    var counter_input = $($(this).closest('div').parent()).children('.count-div').find('.counter');
                     if (Number(counter_input.val()) > 0)
                         counter_input.val(Number(counter_input.val()) - 1);
                 }

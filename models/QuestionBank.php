@@ -18,6 +18,7 @@ class QuestionBank extends Model
     public $options;
     public $optionCount;
     public $checkboxData;
+    public $status = "true";
 
     /**
      * @return array the validation rules.
@@ -25,7 +26,7 @@ class QuestionBank extends Model
     public function rules()
     {
         return [
-
+            [['questions', 'options', 'optionCount', 'checkboxData'], 'required']
         ];
     }
 }

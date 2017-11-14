@@ -10,6 +10,9 @@ use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
 use app\models\QuestionBank;
+use app\models\Questions;
+use app\models\Options;
+use app\models\UsersOptionsAnswers;
 
 class SiteController extends Controller
 {
@@ -63,9 +66,72 @@ class SiteController extends Controller
     public function actionIndex()
     {
         $model = new QuestionBank();
-        return $this->render('index', [
-            'model' => $model,
-        ]);
+        if ($model->load(Yii::$app->request->post())) {
+            $uid = Yii::$app->user->identity->getid();
+            $checkboxData =  $model->checkboxData;
+            $answerString = "";
+            foreach($checkboxData as $check){
+                $answerString .= $check;
+            }
+            
+            //echo $answerString ."<br>";
+            $answerString = str_replace("01","1",$answerString) . "<br>";
+            $questions = $model->questions;
+            $options = $model->options;
+            $optionCount = $model->optionCount;
+            $iCount = 0; // iCount is the counter to which option we are corrently at.
+            foreach($questions as $key=>$question){
+                $questionObj = new Questions();
+                $questionObj->name = $question;
+                $questionObj->save(false);
+
+                echo $answerString; 
+                echo $question. "<br>";
+                
+                //echo $optionCount[$key];
+                for($i = 0; $i < $optionCount[$key]; $i++){
+                    $optionObj = new Options();
+                    $optionObj->name = $options[$iCount];
+                    $optionObj->save();
+                    echo "Option Inerted - ".$options[$iCount]."<br>";
+                    if($answerString[$iCount]=='0'){
+                        echo "Answer value is 0 <br>";
+                        echo "VALUES<br> uid=".$uid."<br>qid=".$questionObj->getPrimaryKey()."<br>oid=".$optionObj->getPrimaryKey()."<br>";
+                        $questionAnswer = new UsersOptionsAnswers();
+                        $questionAnswer->uid = $uid;
+                        $questionAnswer->qid = $questionObj->getPrimaryKey();
+                        $questionAnswer->oid = $optionObj->getPrimaryKey();
+                        $questionAnswer->flag = 'false';
+                        if($questionAnswer->save(false)){
+                            echo "Record Inserted <br>";
+                        }else{
+                            echo "Fail <br>";
+                        }
+                        
+
+                    }else{
+                        echo "Answer value is 1 <br>";
+                        $questionAnswer = new UsersOptionsAnswers();
+                        echo "VALUES<br> uid=".$uid."<br>qid=".$questionObj->getPrimaryKey()."<br>oid=".$optionObj->getPrimaryKey()."<br>";
+                        $questionAnswer->uid = $uid;
+                        $questionAnswer->qid = $questionObj->getPrimaryKey();
+                        $questionAnswer->oid = $optionObj->getPrimaryKey();
+                        $questionAnswer->flag = 'true';
+                        if($questionAnswer->save(false)){
+                            echo "Record Inserted <br>";
+                        }else{
+                            echo "Fail <br>";
+                        }
+                    }
+                    echo "-----------<br>";
+                    $iCount++;
+                }
+            }
+        }else{
+            return $this->render('index', [
+                'model' => $model,
+            ]);
+        }
     }
 
     /**
