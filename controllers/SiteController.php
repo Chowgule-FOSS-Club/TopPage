@@ -58,7 +58,7 @@ class SiteController extends Controller
         ];
     }
 
-    /**
+      /**
      * Displays homepage.
      *
      * @return string
@@ -107,8 +107,6 @@ class SiteController extends Controller
                         }else{
                             echo "Fail <br>";
                         }
-                        
-
                     }else{
                         echo "Answer value is 1 <br>";
                         $questionAnswer = new UsersOptionsAnswers();
