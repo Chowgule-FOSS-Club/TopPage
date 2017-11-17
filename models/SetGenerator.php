@@ -38,12 +38,12 @@ class SetGenerator extends Model
         return $randomIndexArray;
     }
 
-    public function getSet()
+    public function getSet($uid)
     {
 
         $user1 = Users::find();
         $user1->joinWith('questions');
-        $users1=$user1->where(['users.uid' => 1])
+        $users1=$user1->where(['users.uid' => $uid])
         ->one();
 
         $usersOptionsAnswers = UsersOptionsAnswers::find();
@@ -92,7 +92,7 @@ class SetGenerator extends Model
             $randomQuestion->answer_array = $answerArray;
 
         }
-        return $randomQuestion;
+        return $randomRandomQuestionArray;
        
    
 
