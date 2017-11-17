@@ -88,10 +88,16 @@ class Users extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getUsersQuestionsAnswers()
+    public function getUsersOptionsAnswers()
     {
-        return $this->hasMany(UsersQuestionsAnswers::className(), ['uid' => 'uid']);
+        return $this->hasMany(UsersOptionsAnswers::className(), ['uid' => 'uid']);
     }
 
+    public function getQuestions()
+    {
+        return $this->hasMany(Questions::className(), ['qid' => 'qid'])->viaTable('users_options_answers', ['uid' => 'uid']);
+    }
+
+   
     
 }

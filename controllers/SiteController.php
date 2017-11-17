@@ -13,6 +13,7 @@ use app\models\QuestionBank;
 use app\models\Questions;
 use app\models\Options;
 use app\models\UsersOptionsAnswers;
+use app\models\SetGenerator;
 
 class SiteController extends Controller
 {
@@ -57,8 +58,11 @@ class SiteController extends Controller
             ],
         ];
     }
-
-      /**
+    public function actionTest(){
+        $setGen = new SetGenerator();
+        $setGen->getSet();
+    }
+     /**
      * Displays homepage.
      *
      * @return string
