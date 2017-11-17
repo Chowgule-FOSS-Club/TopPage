@@ -87,7 +87,7 @@ class SetGenerator extends Model
 
             for($i=0; $i < sizeof($usersOptionsAnswer); $i++){
                 if($question->qid == $usersOptionsAnswer[$i]->qid){
-                    array_push($answerArray,$usersOptionsAnswer[$i]->o);   
+                    array_push($answerArray,$i);   
                 }
             }
             $randomQuestion->answer_array = $answerArray;
