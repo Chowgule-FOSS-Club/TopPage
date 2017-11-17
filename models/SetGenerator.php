@@ -54,13 +54,13 @@ class SetGenerator extends Model
         $size = sizeof($question_array);
         $randomIndexArray = $this->getRandomArray($size);        
 
-        $randomQuestionArray[] = null;
+        $randomQuestionArray[] = [];
 
         for ($i=0; $i<sizeof($randomIndexArray); $i++) {
-            $randomQuestionArray[$randomIndexArray[$i]] = $question_array[$i];
+            $randomQuestionArray[$i] = $question_array[$randomIndexArray[$i]];
         }    
 
-        $randomRandomQuestionArray[] = null;  
+        $randomRandomQuestionArray = [];  
         $count = 0;
 
                
@@ -75,10 +75,10 @@ class SetGenerator extends Model
             $size = sizeof($options_array);
             $randomIndexArray = $this->getRandomArray($size);        
     
-            $randomOptionArray[3] = null;
+            $randomOptionArray = [];
     
             for ($i=0; $i<sizeof($randomIndexArray); $i++) {
-                $randomOptionArray[$randomIndexArray[$i]] = $options_array[$i];
+                $randomOptionArray[$i] = $options_array[$randomIndexArray[$i]];
             }           
 
             $randomQuestion->option_array = $randomOptionArray;
