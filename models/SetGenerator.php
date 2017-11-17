@@ -85,11 +85,11 @@ class SetGenerator extends Model
             $randomQuestion->option_array = $randomOptionArray;            
 
             for($i=0; $i < sizeof($usersOptionsAnswer); $i++){
-                if($question->qid == $usersOptionsAnswer[$i]->qid){                     
-                    for($j=0; $j < sizeof($options_array); $j++){
-                        if($usersOptionsAnswer[$i]->oid == $options_array[$j]->oid){
+                if($question->qid == $usersOptionsAnswer[$i]->qid){          
+                    for($j=0; $j < sizeof($randomOptionArray); $j++){
+                        if($randomOptionArray[$j]->oid == $usersOptionsAnswer[$i]->oid){
                            array_push($answerArray,$j);     
-                    }
+                         }
                 }
             }
             $randomQuestion->answer_array = $answerArray;
@@ -97,7 +97,18 @@ class SetGenerator extends Model
         }
     }
 
+        foreach($randomRandomQuestionArray as $question){
+            echo 'Q'.$question->question->name.'<br>';
+            foreach($question->option_array as $option){
+                echo $option->name.'<br>';
+            }
+            foreach($question->answer_array as $answer){
+                echo $answer.'<br>';
+            }
+            echo '<br>';
 
+
+        }
         return $randomRandomQuestionArray;
        
    
