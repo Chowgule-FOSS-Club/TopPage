@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use Yii;
 use app\models\fpdf;
+use app\models\SetGenerator;
 
 //use app\models\fpdf;
 //require('app\models\fpdf');
@@ -12,6 +13,13 @@ class TestController extends \yii\web\Controller
 {
     public function actionIndex()
     {
+        $set = new SetGenerator();
+        $randomSet = $set->getSet(Yii::$app->user->identity->uid);
+        $this->generateQuestionPaper($randomSet);
+        //return $this->render('index');
+    }
+
+    public function generateQuestionPaper($randomSet){
         $pdf = new FPDF();
         $pdf->AddPage();
         $pdf->Rect( 4, 4 , 201 , 285);
@@ -33,12 +41,64 @@ class TestController extends \yii\web\Controller
         $pdf->Cell(190,6,'____________________________________________________________', 0, 1, 'C');
         $pdf->Ln(6);
         $pdf->setFont("Arial", "", 12);
-        $str = "Q1: this is a a new question\n\t\t\tA. Hello World\n\t\t\tB. Bye wORLD\n\t\t\tC. Yo man \n\t\t\tD. Yeahhhhhh".
-               "\n\nQ2: Which of the following states is the capital state of India? \n\t\t\tA. Goa\n\t\t\tB. Bye wORLD\n\t\t\tC. Yo man \n\t\t\tD. Yeahhhhhh";
-        $pdf->MultiCell(0,6,$str);
+        $pdf->MultiCell(0,6,$this->getQuestions($randomSet));
 
         $pdf->Output("test.pdf", "D");
-        //return $this->render('index');
     }
+
+
+    public function getAnswers($randomSet)
+    {
+        $str="";
+        
+        $question_label = 1;
+        foreach($randomSet as $question){
+            //echo $question->question->name."<br>";
+            $str .= $question_label.") ".$question->question->name."\n";
+            $options = $question->option_array;
+            $option_label = "A";
+            /*foreach($options as $option){
+                //echo "->".$option->name. "<br>";
+                $str .= "\t\t\t".$option_label. ". ".$option->name."\n";
+                $option_label++;
+            }*/
+            $option_label = "A";
+            $answers = $question->answer_array;
+            foreach($answers as $answer){
+                $str .= "\t\t\t".$option_label. ". ".$answer->name."\n";
+                $option_label++;
+                //echo "Ans-". $answer->name. "<br>";
+            }
+            $question_label++;
+            $str .= "\n";
+        }
+        return $str;
+    }
+
+    public function getQuestions($randomSet)
+    {
+        $str="";
+        
+        $question_label = 1;
+        foreach($randomSet as $question){
+            //echo $question->question->name."<br>";
+            $str .= $question_label.") ".$question->question->name."\n";
+            $options = $question->option_array;
+            $option_label = "A";
+            foreach($options as $option){
+                //echo "->".$option->name. "<br>";
+                $str .= "\t\t\t".$option_label. ". ".$option->name."\n";
+                $option_label++;
+            }
+            $answers = $question->answer_array;
+            foreach($answers as $answer){
+                //echo "Ans-". $answer->name. "<br>";
+            }
+            $question_label++;
+            $str .= "\n";
+        }
+        return $str;
+    }
+
 
 }
