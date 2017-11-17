@@ -38,7 +38,7 @@ class SetGenerator extends Model
         return $randomIndexArray;
     }
 
-    public function getSet($uid)
+    public function getSet($uid=1)
     {
 
         $user1 = Users::find();
@@ -86,8 +86,11 @@ class SetGenerator extends Model
             $count++;
 
             for($i=0; $i < sizeof($usersOptionsAnswer); $i++){
-                if($question->qid == $usersOptionsAnswer[$i]->qid){
-                    array_push($answerArray,$i);   
+                if($question->qid == $usersOptionsAnswer[$i]->qid){                     
+                    for($j=0; $j < sizeof($options_array); $j++){
+                        if($usersOptionsAnswer[$i]->oid == $options_array[$j]->oid){
+                           array_push($answerArray,$i);     
+                    }
                 }
             }
             $randomQuestion->answer_array = $answerArray;
