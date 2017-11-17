@@ -10,7 +10,7 @@ use Yii;
  * @property integer $qid
  * @property string $name
  *
- * @property UsersQuestionsAnswers[] $usersQuestionsAnswers
+ * @property UsersOptionsAnswers[] $usersOptionsAnswers
  */
 class Questions extends \yii\db\ActiveRecord
 {
@@ -47,8 +47,13 @@ class Questions extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getUsersQuestionsAnswers()
+    public function getUsersOptionsAnswers()
     {
-        return $this->hasMany(UsersQuestionsAnswers::className(), ['qid' => 'qid']);
+        return $this->hasMany(UsersOptionsAnswers::className(), ['qid' => 'qid']);
+    }
+
+    public function getOptions()
+    {
+        return $this->hasMany(Options::className(), ['oid' => 'oid'])->viaTable('users_options_answers', ['qid' => 'qid']);
     }
 }

@@ -77,4 +77,7 @@ class UsersOptionsAnswers extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Users::className(), ['uid' => 'uid']);
     }
+
+    
+
 }
