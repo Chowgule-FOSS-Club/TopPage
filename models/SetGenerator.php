@@ -103,6 +103,6 @@ class SetGenerator extends Model
     }
 
 
-   
+}
 
 }
