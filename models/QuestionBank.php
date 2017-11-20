@@ -18,6 +18,11 @@ class QuestionBank extends Model
     public $options;
     public $optionCount;
     public $checkboxData;
+    public $semester;
+    public $subject;
+    public $marks;
+    public $time;
+    public $setCount;
     public $status = "true";
 
     /**
@@ -26,7 +31,7 @@ class QuestionBank extends Model
     public function rules()
     {
         return [
-            [['questions', 'options', 'optionCount', 'checkboxData'], 'required']
+            [['questions', 'options', 'optionCount', 'checkboxData', 'semester', 'subject', 'marks', 'time', 'setCount'], 'required']
         ];
     }
 }

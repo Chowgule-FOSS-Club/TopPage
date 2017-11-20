@@ -32,7 +32,8 @@ class Users extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             [['email', 'password'], 'required'],
             [['email'], 'string', 'max' => 60],
             ['email', 'email'],
-            [['password'], 'string', 'max' => 25],
+            [['password'], 'string'],
+            [['email'], 'unique'],
         ];
     }
 
@@ -76,7 +77,8 @@ class Users extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 
     public function validatePassword($password)
     {
-        return $this->password === $password;
+        return Yii::$app->getSecurity()->validatePassword($password, $this->password);
+        
     }
 
     public static function findByUsername($username)

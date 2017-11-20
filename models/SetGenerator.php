@@ -47,7 +47,7 @@ class SetGenerator extends Model
         ->one();
 
         $usersOptionsAnswers = UsersOptionsAnswers::find();
-        $usersOptionsAnswer=$usersOptionsAnswers->where(['uid' => 1,'flag' => true])
+        $usersOptionsAnswer=$usersOptionsAnswers->where(['uid' => $uid,'flag' => true])
         ->all();
 
         $question_array = $users1->questions;
@@ -97,7 +97,7 @@ class SetGenerator extends Model
         }
     }
 
-        foreach($randomRandomQuestionArray as $question){
+        /* foreach($randomRandomQuestionArray as $question){
             echo 'Q'.$question->question->name.'<br>';
             foreach($question->option_array as $option){
                 echo $option->name.'<br>';
@@ -108,7 +108,7 @@ class SetGenerator extends Model
             echo '<br>';
 
 
-        }
+        } */
         return $randomRandomQuestionArray;
        
    

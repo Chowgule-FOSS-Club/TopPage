@@ -19,8 +19,8 @@ class TestController extends \yii\web\Controller
         for($i=1; $i<=$no_of_sets;$i++){
             $set = new SetGenerator();
             $randomSet = $set->getSet(Yii::$app->user->identity->uid);
-            $this->generateQuestionPaper($randomSet, "Question-Set-". $i.".pdf");
-            $this->generateAnswerPaper($randomSet, "Answer-Set-". $i.".pdf");
+            $this->generateQuestionPaper($randomSet, "Question-Set-". $i);
+            $this->generateAnswerPaper($randomSet, "Answer-Set-". $i);
         }
         
         /* $this->generateQuestionPaper($randomSet);
@@ -39,7 +39,7 @@ class TestController extends \yii\web\Controller
         $pdf->Cell(190,6,'Autonomous', 0, 1, 'C');
         $pdf->Ln(1);
         $pdf->SetFont('Arial','',16);
-        $pdf->Cell(190,6,'Answer Key', 0, 1, 'C');
+        $pdf->Cell(190,6,$name, 0, 1, 'C');
         $pdf->Cell(190,6,'SET - A', 0, 1, 'C');
         $pdf->setFont("Arial", '', 14);
         $pdf->Cell(190,3,'', 0, 1, 'C');
@@ -53,7 +53,7 @@ class TestController extends \yii\web\Controller
         $pdf->Ln(6);
         $pdf->setFont("Arial", "", 12);
         $pdf->MultiCell(0,6,$this->getAnswers($randomSet));
-        $pdf->Output("files/".$name, "F");
+        $pdf->Output("files/".$name.".pdf", "F");
     }
 
     public function generateQuestionPaper($randomSet, $name){
@@ -67,7 +67,7 @@ class TestController extends \yii\web\Controller
         $pdf->Cell(190,6,'Autonomous', 0, 1, 'C');
         $pdf->Ln(1);
         $pdf->SetFont('Arial','',16);
-        $pdf->Cell(190,6,'SET - A', 0, 1, 'C');
+        $pdf->Cell(190,6,$name, 0, 1, 'C');
         $pdf->setFont("Arial", '', 14);
         $pdf->Cell(190,3,'', 0, 1, 'C');
         $pdf->Cell(190,8,'', 0, 1, 'C');
@@ -79,7 +79,7 @@ class TestController extends \yii\web\Controller
         $pdf->Ln(6);
         $pdf->setFont("Arial", "", 12);
         $pdf->MultiCell(0,6,$this->getQuestions($randomSet));
-        $pdf->Output("files/".$name, "F");
+        $pdf->Output("files/".$name.".pdf", "F");
     }
 
 

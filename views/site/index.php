@@ -3,72 +3,41 @@ use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 /* @var $this yii\web\View */
 
-$this->title = 'My Yii Application';
+$this->title = 'Top Paper';
 ?>
  <button type="button" class="btn btn-primary add-question-btn">Add Question</button>
  <button type="button" class="btn btn-danger remove-question-btn">Remove Question</button>
 
- <!--
-    <div class="question-bank container">
-        <div class="question-card">
-            <div class="row">
-                <div class="col-md-12">
-                    <h3 class="question-number">Question - 1</h3>
-                    <hr>
-                    <div class="input-group">
-                        <span class="input-group-addon" id="basic-addon1">Question 1</span>
-                        <input type="text" class="form-control" placeholder="" aria-describedby="basic-addon1">
-                    </div><br>
-                    <div class="row">
-                        <div class="count-div">
-                            <input type="hidden" value="4" class="counter">
-                        </div>
-                        <div class="col-md-6 option-div">
-                            <div class="input-group">
-                                <span class="input-group-addon" id="basic-addon1"><input class="form-check-input" type="checkbox" value=""></span>
-                                <input type="text" class="form-control" placeholder="" aria-describedby="basic-addon1">
-                            </div>
-                            <div class="input-group">
-                                <span class="input-group-addon" id="basic-addon1"><input class="form-check-input" type="checkbox" value=""></span>
-                                <input type="text" class="form-control" placeholder="" aria-describedby="basic-addon1">
-                            </div>
-                            <div class="input-group">
-                                <span class="input-group-addon" id="basic-addon1"><input class="form-check-input" type="checkbox" value=""></span>
-                                <input type="text" class="form-control" placeholder="" aria-describedby="basic-addon1">
-                            </div>
-                            <div class="input-group">
-                                <span class="input-group-addon" id="basic-addon1"><input class="form-check-input" type="checkbox" value=""></span>
-                                <input type="text" class="form-control" placeholder="" aria-describedby="basic-addon1">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <button type="button" class="btn btn-success add-option-btn">Add New Option</button>
-                            <button type="button" class="btn btn-danger remove-option-btn">Remove Option</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
--->
     <?php $form = ActiveForm::begin([
         'id' => 'bank-form',
         'fieldConfig' => [
             'template' => "{input}",
             'labelOptions' => ['class' => 'col-lg-1 control-label'],
         ],
-    ]); ?>
-
+    ]); 
+    ?>
+    <div class="row">
+        <div class="col-md-6">
+            <br>
+            <?= $form->field($model, 'semester')->textInput(['autofocus' => true, 'placeholder'=>'Semester']) ?>
+            <?= $form->field($model, 'subject')->textInput(['autofocus' => true, 'placeholder'=>'Subject']) ?>
+            <?= $form->field($model, 'time')->textInput(['autofocus' => true, 'placeholder'=>'Time']) ?>
+            <?= $form->field($model, 'marks')->textInput(['autofocus' => true, 'placeholder'=>'Marks']) ?>
+            <?= $form->field($model, 'setCount')->textInput(['autofocus' => true, 'placeholder'=>'Set Number', 'type'=>'number']) ?>
+        </div>
+        <div class="col-md-6">
+            
+        </div>
+    </div>
 <div class="question-bank container">
 <?php $checkboxTemplate = '{input}'; ?>
         <div class="question-card">
             <div class="row">
                 <div class="col-md-12">
-                    <h3 class="question-number">Question - 1</h3>
+                    <!-- <h3 class="question-number">Question - 1</h3> -->
                     <hr>
                     <div class="input-group">
-                        <span class="input-group-addon" id="basic-addon1">Question 1</span>
+                        <span class="input-group-addon question-number" id="basic-addon1">Question 1</span>
                         <?= $form->field($model, 'questions[]')->textInput(['autofocus' => true]) ?>
                     </div><br>
                     <div class="row">
@@ -78,7 +47,7 @@ $this->title = 'My Yii Application';
                         </div>
                         <div class="col-md-6 option-div">
                             <div class="input-group checkbox-div">
-                                <span class="input-group-addon" id="basic-addon1"><?= $form->field($model, 'checkboxData[]')->checkbox(['template' => $checkboxTemplate]); ?></span>
+                                <span class="input-group-addon" id="basic-addon1"><?= $form->field($model, 'checkboxData[]')->checkbox(['template' => $checkboxTemplate, 'class' => 'checkbox']); ?></span>
                                 <?= $form->field($model, 'options[]')->textInput(['autofocus' => true]) ?>
                             </div>
                             <div class="input-group">
@@ -90,6 +59,7 @@ $this->title = 'My Yii Application';
                                 <?= $form->field($model, 'options[]')->textInput(['autofocus' => true]) ?>    
                             </div>
                             <div class="input-group">
+                            
                                 <span class="input-group-addon" id="basic-addon1"><?= $form->field($model, 'checkboxData[]')->checkbox(['template' => $checkboxTemplate]); ?></span>
                                 <?= $form->field($model, 'options[]')->textInput(['autofocus' => true]) ?>    
                             </div>
@@ -114,6 +84,8 @@ $this->title = 'My Yii Application';
     <?php 
     $script = <<< JS
         $(document).ready(function () {
+            var checkbox = $('.option-div').find(".checkbox").last();
+            checkbox.prop("checked", 'checked');
             var question_number = 1;
             $('body').on('click', '.add-option-btn', function (){
                 console.log("adding new option");
@@ -153,6 +125,10 @@ $this->title = 'My Yii Application';
             });
 
             $('.add-question-btn').click(function () {
+                
+                var checkbox1 = $('.question-bank').children().last().find('.checkbox');
+                alert(checkbox1);
+                checkbox1.prop("checked", 'checked');
                 question_number++;
                 $('.question-bank').append($('.question-card').html());
                 $('.question-bank').children().last().find('.question-number').html("Question - "+question_number);
