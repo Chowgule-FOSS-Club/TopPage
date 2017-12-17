@@ -126,9 +126,9 @@ $this->title = 'Top Paper';
 
             $('.add-question-btn').click(function () {
                 
-                var checkbox1 = $('.question-bank').children().last().find('.checkbox');
-                alert(checkbox1);
-                checkbox1.prop("checked", 'checked');
+                /* var checkbox1 = $('.question-bank').children().last().find('.checkbox');
+                alert(checkbox1.type);
+                checkbox1.prop("checked", 'checked'); */
                 question_number++;
                 $('.question-bank').append($('.question-card').html());
                 $('.question-bank').children().last().find('.question-number').html("Question - "+question_number);

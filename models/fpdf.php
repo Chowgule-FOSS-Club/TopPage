@@ -364,6 +364,7 @@ function AddPage($orientation='', $size='', $rotation=0)
 
 function Header()
 {
+	$this->Rect( 4, 4 , 201 , 285);
 	// To be implemented in your own inherited class
 }
 

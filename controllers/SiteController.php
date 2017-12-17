@@ -19,9 +19,13 @@ use app\models\fpdf;
 
 class SiteController extends Controller
 {
+    
     /**
      * @inheritdoc
      */
+    protected $col = 0; // Current column
+    protected $y0;      // Ordinate of column start
+    public $pdf;
     public function behaviors()
     {
         return [
@@ -92,75 +96,51 @@ class SiteController extends Controller
         $model = new QuestionBank();
         if ($model->load(Yii::$app->request->post())) {
                 $this->cleanUp();
-                echo "<br>---%----".$model->setCount."---%---<br>";
-                echo "<br>---%----".$model->semester."---%---<br>";
-                echo "<br>---%----".$model->time."---%---<br>";
-                echo "<br>---%----".$model->subject."---%---<br>";
                 $uid = Yii::$app->user->identity->getid();
                 $checkboxData =  $model->checkboxData;
                 $answerString = "";
                 foreach($checkboxData as $check){
                     $answerString .= $check;
                 }
-                
-                //echo $answerString ."<br>";
-                $answerString = str_replace("01","1",$answerString) . "<br>";
+                $answerString = str_replace("01","1",$answerString) /* . "<br>" */;
                 $questions = $model->questions;
                 $options = $model->options;
                 $optionCount = $model->optionCount;
-                $iCount = 0; // iCount is the counter to which option we are corrently at.
+                $iCount = 0; 
                 foreach($questions as $key=>$question){
                     $questionObj = new Questions();
                     $questionObj->name = $question;
                     $questionObj->save(false);
 
-                    echo $answerString; 
-                    echo $question. "<br>";
-                    
-                    //echo $optionCount[$key];
                     for($i = 0; $i < $optionCount[$key]; $i++){
                         $optionObj = new Options();
                         $optionObj->name = $options[$iCount];
                         $optionObj->save();
-                        echo "Option Inerted - ".$options[$iCount]."<br>";
                         if($answerString[$iCount]=='0'){
-                            echo "Answer value is 0 <br>";
-                            echo "VALUES<br> uid=".$uid."<br>qid=".$questionObj->getPrimaryKey()."<br>oid=".$optionObj->getPrimaryKey()."<br>";
                             $questionAnswer = new UsersOptionsAnswers();
                             $questionAnswer->uid = $uid;
                             $questionAnswer->qid = $questionObj->getPrimaryKey();
                             $questionAnswer->oid = $optionObj->getPrimaryKey();
                             $questionAnswer->flag = 'false';
-                            if($questionAnswer->save(false)){
-                                echo "Record Inserted <br>";
-                            }else{
-                                echo "Fail <br>";
-                            }
                         }else{
-                            echo "Answer value is 1 <br>";
-                            $questionAnswer = new UsersOptionsAnswers();
-                            echo "VALUES<br> uid=".$uid."<br>qid=".$questionObj->getPrimaryKey()."<br>oid=".$optionObj->getPrimaryKey()."<br>";
+                             $questionAnswer = new UsersOptionsAnswers();
                             $questionAnswer->uid = $uid;
                             $questionAnswer->qid = $questionObj->getPrimaryKey();
                             $questionAnswer->oid = $optionObj->getPrimaryKey();
                             $questionAnswer->flag = 'true';
-                            if($questionAnswer->save(false)){
-                                echo "Record Inserted <br>";
-                            }else{
-                                echo "Fail <br>";
-                            }
+                            
                         }
-                        echo "-----------<br>";
+                        $questionAnswer->save();
                         $iCount++;
                     }
                 }
                 
                 $no_of_sets = (int)$model->setCount;
                 $set = new SetGenerator();
-                $randomSet = $set->getSet(Yii::$app->user->identity->uid);
+                $randomSet = $set->getSet($uid);
                 for($i=1; $i<=$no_of_sets;$i++){
                     $set = new SetGenerator();
-                    $randomSet = $set->getSet(Yii::$app->user->identity->uid);
+                    $randomSet = $set->getSet($uid);
                     $this->generateQuestionPaper($randomSet, "Question-Set-". $i, $model->semester, $model->subject, $model->marks, $model->time);
                     $this->generateAnswerPaper($randomSet, "Answer-Set-". $i, $model->semester, $model->subject, $model->marks, $model->time);
                 }
@@ -234,13 +214,10 @@ class SiteController extends Controller
         $pdf->Cell(190,6,$name, 0, 1, 'C');
         $pdf->Cell(190,6,'SET - A', 0, 1, 'C');
         $pdf->setFont("Arial", '', 14);
-        $pdf->Cell(190,3,'', 0, 1, 'C');
-        $pdf->Cell(190,8,'', 0, 1, 'C');
-        
         $pdf->Cell(190,6,'____________________________________________________________', 0, 1, 'C');
         $pdf->Ln(6);
         $pdf->setFont("Arial", "", 12);
-        $pdf->MultiCell(0,6,$this->getAnswers($randomSet));
+        $pdf->MultiCell(20,6,$this->getAnswers($randomSet));
         $pdf->Output("files/".$name.".pdf", "F");
     }
 
@@ -282,10 +259,15 @@ class SiteController extends Controller
             $options = $question->option_array;
             $option_label = "A";
             $answers = $question->answer_array;
-            foreach($answers as $answer){
-                $str .= $answer_labels[$answer]." ";
-                $option_label++;
-                //echo "Ans-". $answer->name. "<br>";
+
+            if(sizeof($answers) > 0){
+                foreach($answers as $answer){
+                    $str .= $answer_labels[$answer]." ";
+                    $option_label++;
+                    //echo "Ans-". $answer->name. "<br>";
+                }
+            }else{
+                $str .= "No Answer";
             }
             $question_label++;
             $str .= "\n";
@@ -355,6 +337,36 @@ class SiteController extends Controller
         $questions::deleteAll();
         $options = new Options();
         $options::deleteAll();
+    }
+
+    function SetCol($col)
+    {
+        // Set position at a given column
+        $this->col = $col;
+        $x = 10+$col*65;
+        $pdf->SetLeftMargin($x);
+        $pdf->SetX($x);
+    }
+    
+    function AcceptPageBreak()
+    {
+        // Method accepting or not automatic page break
+        if($this->col<2)
+        {
+            // Go to next column
+            $this->SetCol($this->col+1);
+            // Set ordinate to top
+            $pdf->SetY($this->y0);
+            // Keep on page
+            return false;
+        }
+        else
+        {
+            // Go back to first column
+            $this->SetCol(0);
+            // Page break
+            return true;
+        }
     }
 
 }

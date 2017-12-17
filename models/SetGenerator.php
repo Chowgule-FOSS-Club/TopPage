@@ -38,7 +38,7 @@ class SetGenerator extends Model
         return $randomIndexArray;
     }
 
-    public function getSet($uid=4)
+    public function getSet($uid=8)
     {
 
         $user1 = Users::find();
