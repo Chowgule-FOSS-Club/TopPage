@@ -38,7 +38,7 @@ class SetGenerator extends Model
         return $randomIndexArray;
     }
 
-    public function getSet($uid=1)
+    public function getSet($uid=4)
     {
 
         $user1 = Users::find();
@@ -97,18 +97,24 @@ class SetGenerator extends Model
         }
     }
 
-        /* foreach($randomRandomQuestionArray as $question){
+         foreach($randomRandomQuestionArray as $question){
             echo 'Q'.$question->question->name.'<br>';
             foreach($question->option_array as $option){
                 echo $option->name.'<br>';
             }
-            foreach($question->answer_array as $answer){
-                echo $answer.'<br>';
+            if(sizeof($question->answer_array)==0){
+                echo 'hello';
+            }else{
+                foreach($question->answer_array as $answer){
+                    echo $answer.'<br>';
+                }
             }
+            
             echo '<br>';
 
 
-        } */
+
+        } 
         return $randomRandomQuestionArray;
        
    
