@@ -109,6 +109,7 @@ class SetGenerator extends Model
                     echo $answer.'<br>';
                 }
             }
+            echo 'hello';
             
             echo '<br>';
 
